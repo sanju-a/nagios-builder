@@ -194,7 +194,14 @@ RUN dnf clean all && \
  
 FROM zreis-nagios-compiler
 WORKDIR ${NAGIOS_RPMS_PATH}
-COPY *.rpm .
+COPY nagios-4.4.13-4.el8.x86_64.rpm .
+COPY nagios-common-4.4.13-4.el8.x86_64.rpm .
+COPY nagios-contrib-4.4.13-4.el8.x86_64.rpm .
+COPY nagios-contrib-debuginfo-4.4.13-4.el8.x86_64.rpm .
+COPY nagios-debuginfo-4.4.13-4.el8.x86_64.rpm .
+COPY nagios-debugsource-4.4.13-4.el8.x86_64.rpm .
+COPY nagios-devel-4.4.13-4.el8.x86_64.rpm .
+COPY nagios-selinux-4.4.13-4.el8.x86_64.rpm .
 WORKDIR $MK_LIVESTATUS_OBJ_PATH
 COPY livestatus.so .
 COPY livestatus.o .
