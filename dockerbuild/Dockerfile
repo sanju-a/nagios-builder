@@ -27,10 +27,7 @@ LABEL maintainer="Sanju Abraham <sabraham@zscaler.com> and <asanju@gmail.com>"
 ARG NAGIOS_VERSION=4.4.13
 ARG NAGIOS_PLUGINS_VERSION=2.4.6
 ARG MK_LIVESTATUS_VER=1.2.8p25
-
-ARG NAGIOS_RPMS_PATH="/tmp/nagioscore-nagios-${NAGIOS_VERSION}/contrib/"
-ARG MK_LIVESTATUS_OBJ_PATH="/tmp/mk-livestatus-${MK_LIVESTATUS_VER}/src/"
-
+ 
 ENV NAGIOS_HOME=/opt/nagios \
     NAGIOS_USER=nagios \
     NAGIOS_GROUP=nagios \
@@ -192,18 +189,16 @@ RUN dnf clean all && \
 ###   STAGE 6 COPY RPMS and MK_LIVESTATUS OBJECTS        ###
 ### ==================================================== ###
  
-FROM zreis-nagios-compiler
-WORKDIR ${NAGIOS_RPMS_PATH}
-COPY nagios-4.4.13-4.el8.x86_64.rpm .
-COPY nagios-common-4.4.13-4.el8.x86_64.rpm .
-COPY nagios-contrib-4.4.13-4.el8.x86_64.rpm .
-COPY nagios-contrib-debuginfo-4.4.13-4.el8.x86_64.rpm .
-COPY nagios-debuginfo-4.4.13-4.el8.x86_64.rpm .
-COPY nagios-debugsource-4.4.13-4.el8.x86_64.rpm .
-COPY nagios-devel-4.4.13-4.el8.x86_64.rpm .
-COPY nagios-selinux-4.4.13-4.el8.x86_64.rpm .
-WORKDIR $MK_LIVESTATUS_OBJ_PATH
-COPY livestatus.so .
-COPY livestatus.o .
-COPY unixcat .
-COPY unixcat.o .
+FROM scratch AS export-stage
+
+ARG NAGIOS_VERSION=4.4.13
+ARG MK_LIVESTATUS_VER=1.2.8p25
+
+ARG NAGIOS_RPMS_PATH="/tmp/nagioscore-nagios-${NAGIOS_VERSION}/contrib/"
+ARG MK_LIVESTATUS_OBJ_PATH="/tmp/mk-livestatus-${MK_LIVESTATUS_VER}/src/"
+
+COPY --from=zreis-nagios-compiler ${NAGIOS_RPMS_PATH}/*.rpm .
+COPY --from=zreis-nagios-compiler ${MK_LIVESTATUS_OBJ_PATH}/livestatus.so .
+COPY --from=zreis-nagios-compiler ${MK_LIVESTATUS_OBJ_PATH}/livestatus.o .
+COPY --from=zreis-nagios-compiler ${MK_LIVESTATUS_OBJ_PATH}/unixcat .
+COPY --from=zreis-nagios-compiler ${MK_LIVESTATUS_OBJ_PATH}/unixcat.o .
