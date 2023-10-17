@@ -41,7 +41,7 @@ ENV NAGIOS_HOME=/opt/nagios \
 # Add dependencies required to build Nagios
 RUN dnf update -y && \
     dnf install -y automake libtool autoconf gnutls epel-release \
-                   make gcc gcc-c++ autoconf gettext gnutls-devel \
+                   make gcc gcc-c++ gettext gnutls-devel \
                    gettext-devel kernel-headers-$(uname -r) openssl-devel net-snmp net-snmp-utils \
                    gd gd-devel perl postfix unzip wget httpd which procps-ng
 
